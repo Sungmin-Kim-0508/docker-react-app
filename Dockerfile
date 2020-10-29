@@ -9,6 +9,9 @@ COPY ./ ./
 RUN npm run build
 
 FROM nginx
+# 컨테이너에서 맵핑을 할 포트 번호를 정의.
+# nginx의 기본 포트번호는 80이다.
+EXPOSE 80
 ## --from=   --> 다른 Stage에 있는 파일을 복사할 때 다른 Stage 이름을 명시.
 # --from=builder에서 builder는 위의 as builder에서 가져온 것
 ## /usr/src/app/build /usr/share/nginx/html
