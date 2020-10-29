@@ -1,0 +1,28 @@
+version: "3"
+services:
+  react:
+    build:
+      # 도커 이미지를 구성하기 위한 파일과 폴더들 -> Dockerfile
+      # Dockerfile이 현재 위치에 있으므로 'context: .' 이라고 설정
+      context: .
+      # Dockerfile의 이름이 무엇인지 명시
+      dockerfile: Dockerfile.dev
+    # 포트 맵핑
+    ports:
+      - "3000:3000"
+    volumes:
+      - /usr/src/app/node_modules # /usr/src/app/node_modules은 참조하지 않겠다.
+      - ./:/usr/src/app # ./:/usr/src/app는 참조하겠다
+    environment:
+      - CHOKIDAR_USEPOLLING=true # 중요!! 리액트 핫 리로딩 적용. 윈도우 터미널에서만 필요함
+    stdin_open: true  # 리액트에 한정된 명령어. 리액트 앱을 끌 때 필요.
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /usr/src/app/node_modules
+      - ./:/usr/src/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true # 중요!! 리액트 핫 리로딩 적용. 윈도우 터미널에서만 필요함
+    command: ["npm", "run", "test"]
