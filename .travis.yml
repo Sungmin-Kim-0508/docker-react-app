@@ -1,0 +1,24 @@
+# sudo => 관리자 권한 갖기
+sudo: required
+
+# 언어(플랫폼 선택)
+language: generic
+
+# 리액트 앱을 도커 환경에서 실행하고 있으니 docker라고 명시
+services:
+  - docker
+
+## 스크립트를 실행할 수 있는 환경 구성
+# script를 실행하기 전에 (테스트를 진행하기 전에) 테스트 환경을 만들어줘야 함.
+before_install:
+  - echo "start Creating an image with dockerfile"
+  - docker build -t eddiekim/docker-react-app -f Dockerfile.dev .
+
+## 실행할 스크립트
+# 트래비스 CI에서 '-e CI=true'이 없으면 에러가 남
+# '-- --coverage'는 테스트 내용을 상세하게 보여줌
+script:
+  - docker run -e CI=true eddiekim/docker-react-app npm run test -- --coverage
+
+after_success:
+  - echo "Test Success"
